@@ -59,6 +59,8 @@ class Snake:
     # to be adjusted to fit small scree
     X_POS = 8 #80
     Y_POS = 20 #310
+    Y_POS_DUCK = 20
+    JUMP_VEL = 8.5 * 0.10
 
     def __init__(self):
         self.run_img = RUNNING
@@ -74,7 +76,7 @@ class Snake:
         self.snake_rect = self.image.get_rect()
         self.snake_rect.x = self.X_POS
         self.snake_rect.y = self.Y_POS
-
+        self.jump_vel = self.JUMP_VEL
 
     def update(self, userInput):
         if self.snake_run:
@@ -95,7 +97,7 @@ class Snake:
             self.snake_run = False
             self.snake_jump = False
             self.snake_duck = True
-        elif not (self.snake_jump or self.snake_duck):
+        elif not (self.snake_jump or userInput[pygame.K_DOWN]):
             self.snake_run = True
             self.snake_jump = False
             self.snake_duck = False
@@ -109,9 +111,21 @@ class Snake:
         self.step_index += 1  # used to cycle from frames 1-10 of walk cycle
 
     def jump(self):
-        pass
+        self.image = self.jump_img[self.step_index]
+        if self.snake_jump:
+            self.snake_rect.y -= self.jump_vel * 4
+            self.jump_vel -= 0.8 * 0.10
+        if self.jump_vel < -self.JUMP_VEL:
+            self.snake_jump = False
+            self.jump_vel = self.JUMP_VEL
+
+
     def duck(self):
-        pass
+        self.image = self.duck_img[self.step_index]
+        self.snake_rect = self.image.get_rect()
+        self.snake_rect.x = self.X_POS
+        self.snake_rect.y = self.Y_POS_DUCK
+        self.step_index += 1  # used to cycle from frames 1-10 of walk cycle
 
     def draw(self, SCREEN):
         # Note sprites originally face oposite direction, easier to just flip with transform
