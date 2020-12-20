@@ -35,6 +35,17 @@ JUMPING = [pygame.image.load(os.path.join("CutSprites/strike/tile030.png")),
            pygame.image.load(os.path.join("CutSprites/strike/tile038.png")),
            pygame.image.load(os.path.join("CutSprites/strike/tile039.png"))]
 
+DUCKING = [pygame.image.load(os.path.join("CutSprites/spin/tile010.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile011.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile012.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile013.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile014.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile015.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile016.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile017.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile018.png")),
+           pygame.image.load(os.path.join("CutSprites/spin/tile019.png"))]
+
 BIRD = [pygame.image.load(os.path.join("CutSprites/Assets/bird1.png")),
         pygame.image.load(os.path.join("CutSprites/Assets/bird2.png"))]
 
@@ -52,9 +63,11 @@ class Snake:
     def __init__(self):
         self.run_img = RUNNING
         self.jump_img = JUMPING
+        self.duck_img = DUCKING
 
         self.snake_run = True
         self.snake_jump = False
+        self.snake_duck = False
 
         self.step_index = 0
         self.image = self.run_img[0]
@@ -68,16 +81,24 @@ class Snake:
             self.run()
         if self.snake_jump:
             self.jump()
+        if self.snake_duck:
+            self.duck()
 
         if self.step_index >= 10:
             self.step_index = 0
 
         if userInput[pygame.K_UP] and not self.snake_jump:
             self.snake_jump = True
+            self.snake_duck = False
             self.snake_run = False
-        elif not self.snake_jump:
+        elif userInput[pygame.K_DOWN] and not self.snake_jump:
+            self.snake_run = False
+            self.snake_jump = False
+            self.snake_duck = True
+        elif not (self.snake_jump or self.snake_duck):
             self.snake_run = True
             self.snake_jump = False
+            self.snake_duck = False
 
 
     def run(self):
@@ -87,6 +108,10 @@ class Snake:
         self.snake_rect.y = self.Y_POS
         self.step_index += 1  # used to cycle from frames 1-10 of walk cycle
 
+    def jump(self):
+        pass
+    def duck(self):
+        pass
 
     def draw(self, SCREEN):
         # Note sprites originally face oposite direction, easier to just flip with transform
@@ -103,7 +128,7 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-        SCREEN.fill((255, 255, 255)) # set BG to black for oled
+        SCREEN.fill((000, 000, 000)) # set BG to black for oled
         userInput = pygame.key.get_pressed() # update to respond to pushbutton switch
 
         player.draw(SCREEN)
