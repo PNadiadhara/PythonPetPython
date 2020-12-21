@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 
 
 # Sprites from https://opengameart.org/content/animated-snake provided by Calciumtrice
@@ -60,7 +61,7 @@ class Snake:
     X_POS = 8 #80
     Y_POS = 20 #310
     Y_POS_DUCK = 20
-    JUMP_VEL = 8.5 * 0.10
+    JUMP_VEL = 1
 
     def __init__(self):
         self.run_img = RUNNING
@@ -114,7 +115,7 @@ class Snake:
         self.image = self.jump_img[self.step_index]
         if self.snake_jump:
             self.snake_rect.y -= self.jump_vel * 4
-            self.jump_vel -= 0.8 * 0.10
+            self.jump_vel -= 0.9 * 0.10
         if self.jump_vel < -self.JUMP_VEL:
             self.snake_jump = False
             self.jump_vel = self.JUMP_VEL
