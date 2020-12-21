@@ -132,10 +132,32 @@ class Snake:
         # Note sprites originally face oposite direction, easier to just flip with transform
         SCREEN.blit(pygame.transform.flip(self.image, True, False), (self.snake_rect.x, self.snake_rect.y))
 
+
+class Cloud:
+    def __init__(self):
+        self.x = SCREEN_WIDTH + random.randint(800, 1000)
+        self.y = random.randint(5, 10)
+        self.image = BIRD[0]
+        self.width = self.image.get_width()
+
+    def update(self):
+        self.x -= game_speed
+        if self.x < -self.width:
+            self.x = SCREEN_WIDTH + random.randint(250, 1000)
+            self.y = random.randint(5, 10)
+
+    def draw(self, SCREEN):
+        SCREEN.blit(self.image, (self.x, self.y))
+
+
 def main():
+    global game_speed
+    game_speed = 14
     run = True
     clock = pygame.time.Clock()
     player = Snake()
+    cloud = Cloud()
+
 
     while run:
         for event in pygame.event.get():
@@ -143,11 +165,14 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-        SCREEN.fill((000, 000, 000)) # set BG to black for oled
+        SCREEN.fill((255, 255, 255)) # set BG to black for oled
         userInput = pygame.key.get_pressed() # update to respond to pushbutton switch
 
         player.draw(SCREEN)
         player.update(userInput)
+
+        cloud.draw(SCREEN)
+        cloud.update()
 
         clock.tick(10)
         pygame.display.update()
