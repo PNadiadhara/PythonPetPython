@@ -55,6 +55,12 @@ CACTUS = [pygame.image.load(os.path.join("CutSprites/Assets/Cactus1.png")),
           pygame.image.load(os.path.join("CutSprites/Assets/Cactus3.png")),
           pygame.image.load(os.path.join("CutSprites/Assets/Cactus4.png"))]
 
+CLOUD = pygame.image.load(os.path.join("CutSprites/Assets/Cloud.png"))
+
+BG = pygame.image.load(os.path.join("CutSprites/Assets/track.png"))
+
+
+
 
 class Snake:
     # to be adjusted to fit small scree
@@ -137,7 +143,7 @@ class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
         self.y = random.randint(5, 10)
-        self.image = BIRD[0]
+        self.image = CLOUD
         self.width = self.image.get_width()
 
     def update(self):
@@ -151,12 +157,24 @@ class Cloud:
 
 
 def main():
-    global game_speed
+    global game_speed, x_pos_bg, y_pos_bg
     game_speed = 14
     run = True
     clock = pygame.time.Clock()
     player = Snake()
     cloud = Cloud()
+    x_pos_bg = 0
+    y_pos_bg = 50
+
+    def background():
+        global x_pos_bg, y_pos_bg
+        image_width = BG.get_width()
+        SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+        if x_pos_bg <= -image_width:
+            SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+            x_pos_bg = 0
+        x_pos_bg -= game_speed
 
 
     while run:
@@ -170,6 +188,8 @@ def main():
 
         player.draw(SCREEN)
         player.update(userInput)
+
+        background()
 
         cloud.draw(SCREEN)
         cloud.update()
