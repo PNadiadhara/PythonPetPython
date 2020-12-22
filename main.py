@@ -50,10 +50,10 @@ DUCKING = [pygame.image.load(os.path.join("CutSprites/spin/tile010.png")),
 BIRD = [pygame.image.load(os.path.join("CutSprites/Assets/bird1.png")),
         pygame.image.load(os.path.join("CutSprites/Assets/bird2.png"))]
 
-CACTUS = [pygame.image.load(os.path.join("CutSprites/Assets/Cactus1.png")),
-          pygame.image.load(os.path.join("CutSprites/Assets/Cactus2.png")),
-          pygame.image.load(os.path.join("CutSprites/Assets/Cactus3.png")),
-          pygame.image.load(os.path.join("CutSprites/Assets/Cactus4.png"))]
+CACTUS = [pygame.image.load(os.path.join("CutSprites/Assets/smallCactus1.png")),
+          pygame.image.load(os.path.join("CutSprites/Assets/smallCactus2.png")),
+          pygame.image.load(os.path.join("CutSprites/Assets/smallCactus3.png")),
+          pygame.image.load(os.path.join("CutSprites/Assets/smallCactus4.png"))]
 
 CLOUD = pygame.image.load(os.path.join("CutSprites/Assets/Cloud.png"))
 
@@ -67,7 +67,7 @@ class Snake:
     X_POS = 8 #80
     Y_POS = 20 #310
     Y_POS_DUCK = 20
-    JUMP_VEL = 1
+    JUMP_VEL = 8.5
 
     def __init__(self):
         self.run_img = RUNNING
@@ -120,8 +120,8 @@ class Snake:
     def jump(self):
         self.image = self.jump_img[self.step_index]
         if self.snake_jump:
-            self.snake_rect.y -= self.jump_vel * 4
-            self.jump_vel -= 0.9 * 0.10
+            self.snake_rect.y -= self.jump_vel
+            self.jump_vel -= 0.8 * 1.5
         if self.jump_vel < -self.JUMP_VEL:
             self.snake_jump = False
             self.jump_vel = self.JUMP_VEL
@@ -142,7 +142,7 @@ class Snake:
 class Cloud:
     def __init__(self):
         self.x = SCREEN_WIDTH + random.randint(800, 1000)
-        self.y = random.randint(5, 10)
+        self.y = random.randint(0, 7)
         self.image = CLOUD
         self.width = self.image.get_width()
 
@@ -176,14 +176,14 @@ class Cactus(Obstacle):
     def __init__(self, image):
         self.type = random.randint(0, 3)
         super().__init__(image, self.type)
-        self.rect.y = 16
+        self.rect.y = 36
 
 
 class Bird(Obstacle):
     def __init__(self, image):
         self.type = 0
         super().__init__(image, self.type)
-        self.rect.y = 7
+        self.rect.y = 2
         self.index = 0
 
     def draw(self, SCREEN):
