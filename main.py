@@ -66,7 +66,7 @@ class Snake:
     # to be adjusted to fit small scree
     X_POS = 8 #80
     Y_POS = 20 #310
-    Y_POS_DUCK = 20
+    Y_POS_DUCK = 25
     JUMP_VEL = 8.5
 
     def __init__(self):
@@ -121,7 +121,7 @@ class Snake:
         self.image = self.jump_img[self.step_index]
         if self.snake_jump:
             self.snake_rect.y -= self.jump_vel
-            self.jump_vel -= 0.8 * 1.5
+            self.jump_vel -= 0.8 * 2
         if self.jump_vel < -self.JUMP_VEL:
             self.snake_jump = False
             self.jump_vel = self.JUMP_VEL
@@ -207,7 +207,7 @@ def main():
     points = 0
     font = pygame.font.Font('freesansbold.ttf', 10)
     obstacles = []
-
+    death_count = 0
 
     def score():
         global points, game_speed
@@ -261,11 +261,43 @@ def main():
             obstacle.draw(SCREEN)
             obstacle.update()
             if player.snake_rect.colliderect(obstacle.rect):
-                pygame.draw.rect(SCREEN, (255, 0, 0), player.snake_rect, 2)
+                # Use to debug hitbox
+                # pygame.draw.rect(SCREEN, (255, 0, 0), player.snake_rect, 2)
+                pygame.time.delay(1500)
+                death_count += 1
+                menu(death_count)
 
 
         clock.tick(10)
         pygame.display.update()
 
 
-main()
+def menu(death_count):
+    global points
+    run = True
+    while run:
+        SCREEN.fill((000, 000, 000))
+        font = pygame.font.Font("freesansbold.ttf", 10)
+
+        if death_count == 0:
+            text = font.render("Press to Begin", True, (255, 255, 255))
+        elif death_count > 0:
+            text = font.render("Press to Begin", True, (255, 255, 255))
+            score = font.render("Score: " + str(points), True, (255, 255, 255))
+            scoreRect = score.get_rect()
+            scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 10)
+            SCREEN.blit(score, scoreRect)
+
+        textRect = text.get_rect()
+        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        SCREEN.blit(text, textRect)
+        SCREEN.blit(RUNNING[0], (SCREEN_WIDTH // 2 - 16, SCREEN_HEIGHT // 2 + 16))
+        pygame.display.update()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.KEYDOWN:
+                main()
+
+menu(death_count=0)
